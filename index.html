@@ -139,6 +139,25 @@ const pretty_print::delimiters_values&lt;char> MyDelims::values = { "&lt;", "; "
     delimiter class if you want to use a fixed set of delimiters for a variety of containers on a one-off basis.</p>
 
 
+    <h2>Credits</h2>
+
+    <p>This library is the product of many great contributions to my questions on StackOverflow and on Channel&nbsp;9.
+    Here is the original <a href="http://stackoverflow.com/questions/4850473/pretty-print-c-stl-containers">StackOverflow working topic</a>,
+    here is the <a href="http://stackoverflow.com/questions/6245735/pretty-print-stdtuple">follow-up on printing tuples</a>,
+    and finally the <a href="http://channel9.msdn.com/Forums/TechOff/Templated-STL-container-pretty-printer">Channel&nbsp;9 thread</a> where
+    it all came together. Credits go to Marcelo Cantos for the initial approach, to Sven Groot for an improved, self-contained
+    solution which became the foundation for my code, and to Xeo for the tuple-printing code.</p>
+
+    <h2>To do</h2>
+
+    <p>Possible avenues for future improvements:</p>
+    <ul>
+      <li>Make a version that works with C++98/03, e.g. by removing tuple support and pulling <code>enable_if</code> from <code>std::tr1</code>.</li>
+      <li>Re-enable a pretty-printing output iterator as in Sven's <a href="http://stackoverflow.com/questions/4850473/pretty-print-c-stl-containers/6240947#6240947">original code</a>.</li>
+      <li>Make customization of delimiters easier and nestable.</li>
+      <li>Consider whether the <code>is_container</code> typetrait is too aggressive more carefully. Examples where this library breaks existing code are most appreciated!</li>
+    </ul>
+
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
 
