@@ -28,7 +28,7 @@
 
     <p><strong style="margin-right: 1em;">Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code> (see below)</p>
 
-    <h2>Quick Start</h2>
+    <h2>Quick start</h2>
 
     <p>Download <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a>
     and place it in your source directory. Add <code>#include "prettyprint.hpp"</code> to your source file. You are ready!</p>
@@ -83,6 +83,37 @@ std::cout << foo << std::endl;</div>
     <p>The output would look like so:</p>
     <div class="listing">[(1, {cat, doe, dog}), (3, {goose, moose, ruse})]</div>
 
+    <h2>Advanced usage: Customizing the delimiters</h2>
+
+    <p>The delimiters that are used by the output operation are deduced from compile-time static class constants.
+    In particular, if <code>T</code> denotes any container type, then the appropriate delimiters are defined
+    by the following templated structure:</p>
+    <div class="listing">namespace pretty_print
+{
+    template&lt;typename TChar&gt;
+    struct delimiters_values
+    {
+        typedef TChar char_type;
+        const TChar * prefix;
+        const TChar * delimiter;
+        const TChar * postfix;
+    };
+
+    template&lt;typename T, typename TChar&gt;
+    struct delimiters
+    {
+        typedef delimiters_values&lt;TChar&gt; type;
+        static const type values; 
+    };
+} // namespace</div>
+    <p>The templates are parametrized on <code>TChar</code>, the type of the character,
+    which is <code>char</code> for <code>std::cout</code> and <code>wchar_t</code> for
+    <code>std::wcout</code>. You must define <code>delimiters&lt;T, TChar&gt;::values</code>
+    for your container type <code>T</code>. For example, the default delimiters for
+    <code>TChar = char</code> are declared  as follows:</p>
+    <div class="listing">template&lt;typename T&gt; struct delimiters&lt;T, char&gt; { static const delimiters_values&lt;char&gt; values; };
+template&lt;typename T&gt; const delimiters_values&lt;char&gt; delimiters&lt;T, char&gt;::values = { "[", ", ", "]" };</div>
+es
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
 
