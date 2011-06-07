@@ -90,8 +90,7 @@ std::cout << foo << std::endl;</div>
     by the following templated structure:</p>
     <div class="listing">namespace pretty_print
 {
-    template&lt;typename TChar&gt;
-    struct delimiters_values
+    template&lt;typename TChar&gt; struct delimiters_values
     {
         typedef TChar char_type;
         const TChar * prefix;
@@ -99,21 +98,47 @@ std::cout << foo << std::endl;</div>
         const TChar * postfix;
     };
 
-    template&lt;typename T, typename TChar&gt;
-    struct delimiters
+    template&lt;typename T, typename TChar&gt; struct delimiters
     {
         typedef delimiters_values&lt;TChar&gt; type;
         static const type values; 
     };
 } // namespace</div>
+
     <p>The templates are parametrized on <code>TChar</code>, the type of the character,
     which is <code>char</code> for <code>std::cout</code> and <code>wchar_t</code> for
     <code>std::wcout</code>. You must define <code>delimiters&lt;T, TChar&gt;::values</code>
     for your container type <code>T</code>. For example, the default delimiters for
     <code>TChar = char</code> are declared  as follows:</p>
+
     <div class="listing">template&lt;typename T&gt; struct delimiters&lt;T, char&gt; { static const delimiters_values&lt;char&gt; values; };
 template&lt;typename T&gt; const delimiters_values&lt;char&gt; delimiters&lt;T, char&gt;::values = { "[", ", ", "]" };</div>
-es
+
+    <h3>Overriding delimiters</h3>
+
+    <p>The most straight-forward way to override delimiters for a particular container is to specialize the <code>delimiters</code> struct
+    accordingly. For example, if we want special delimiters for a vector of doubles, we specialize as follows:</p>
+
+    <div class="listing">template&lt;&gt; const pretty_print::delimiters_values&lt;char&gt; pretty_print::delimiters&lt;std::vector&lt;double&gt;, char&gt;::values = { "< ", " ; ", " >" };</div>
+
+    <p>An alternative solution is to provide your own delimiters class. That is a class with a public, static constant named <code>values</code>
+    and of type <code>pretty_print::delimiters_values&lt;TChar&gt;</code>, where you must provide a concrete instance of <code>TChar</code> suitable
+    for your output operation (usually <code>char</code>). With such a class, say <code>MyDelims</code>, you can invoke a wrapper class for any
+    container, say <code>v</code>:</p>
+
+    <div class="listing">std::cout &lt;&lt; pretty_print::custom_delims&lt;MyDelims&gt;(v) &lt;&lt; std::endl;</div>
+
+    <p>(The wrapper class <code>custom_delims</code> uses type erasure to call the relevant internal helper instance
+    of the type of <code>v</code>.) Your delimiter class could for example be declared as follows:</p>
+
+    <div class="listing">struct MyDelims { static const pretty_print::delimiters_values&lt;char&gt; values; };
+const pretty_print::delimiters_values&lt;char> MyDelims::values = { "&lt;", "; ", "&gt;" };</div>
+
+    <p>As a rule of thumb: Specialize <code>pretty_print::delimiters</code> if you want uniform delimiters for
+    a particular container type, and use the <code>pretty_print::custom_delims</code> wrapper with your own
+    delimiter class if you want to use a fixed set of delimiters for a variety of containers on a one-off basis.</p>
+
+
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
 
