@@ -26,7 +26,7 @@
     <p><strong>Download:</strong> <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a>,
     <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
-    <p><strong style="margin-right: 1em;">Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code> (see below)</p>
+    <p><strong style="margin-right: 1em;">Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code></p>
 
     <h2>Quick start</h2>
 
@@ -79,9 +79,18 @@ int main()
 map_type foo = { { 1, std::set&lt;std::string&gt;{ std::string("cat"),  std::string("dog"),  std::string("doe") } },
                  { 3, std::set&lt;std::string&gt;{ std::string("goose"), std::string("moose"), std::string("ruse") } } };
 
-std::cout << foo << std::endl;</div>
+std::cout &lt;&lt; foo &lt;&lt; std::endl;</div>
     <p>The output would look like so:</p>
     <div class="listing">[(1, {cat, doe, dog}), (3, {goose, moose, ruse})]</div>
+
+    <h2>Raw C arrays</h2>
+
+    <p>Raw C arrays may also benefit from the pretty printer by virtue of a wrapper template:</p>
+
+    <div class="listing">int arr[] = { 1, 4, 9, 16 };
+std::cout &lt;&lt; pretty_print_array(arr) &lt;&lt; std::endl;</div>
+
+    <p style="color:#EEE;">If the array size is not known at compile time, it has to be passed to the wrapper via <code>pretty_print_array(arr, size)</code>.</p>
 
     <h2>Advanced usage: Customizing the delimiters</h2>
 
@@ -138,6 +147,16 @@ const pretty_print::delimiters_values&lt;char> MyDelims::values = { "&lt;", "; "
     a particular container type, and use the <code>pretty_print::custom_delims</code> wrapper with your own
     delimiter class if you want to use a fixed set of delimiters for a variety of containers on a one-off basis.</p>
 
+    <h2>Internals</h2>
+
+    <p>The key component of the library is a combination of <code>std::enable_if</code> together with
+    a typetrait <code>is_container&lt;T&gt;</code>. This type trait uses the SFINAE (substitution failure
+    is not an error) model to determine whether a type <code>T::const_iterator</code> exists. If yes,
+    <code>operator&lt;&lt;()</code> is overloaded for type <code>T</code>, and a loop from <code>begin()</code>
+    to <code>end()</code> is performed, inserting the appropriate delimiters.</p>
+
+    <p>The <code>custom_delims</code> helper class uses type-erasure to take an arbitrary container object
+    and instantiate the correct template of the internal helper class with the user-provided delimiter class.</p>
 
     <h2>Credits</h2>
 
