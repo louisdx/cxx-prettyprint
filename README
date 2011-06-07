@@ -1,0 +1,16 @@
+cxx-prettyprint
+===============
+
+A pretty printing library for C++ containers.
+
+Synopsis:
+  Simply by including this header-only library in your source file,
+  you can say "std::cout << x" for any container object x. Sensible
+  defaults are provided, but the behaviour (i.e. the delimiters) are
+  compile-time customizable to a great extent via partial specializiation.
+
+For details, please see the website (http://louisdx.github.com/cxx-prettyprint/).
+
+Language requirements: C++0x
+
+(A modified version that works for C++98/03 should be very easy to derive.)
