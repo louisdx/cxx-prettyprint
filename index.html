@@ -50,8 +50,37 @@ int main()
     <h2>Description</h2>
 
     <p><em>cxx-prettyprint</em> is a header-only library for C++ which provides printing via the &lt;&lt;-operator
-    for any container class.</p>
+    for any container class. Before we go into the details, let us quickly think about what we need to do:</p>
 
+    <ul>
+      <li>An empty container should print as <code>[]</code>.</li>
+      <li>A container with a single element should print as <code>[3]</code>.</li>
+      <li>A container with <var>n</var>&nbsp;&gt;&nbsp;1 elements should print as <code>[3, -11, 137]</code>;
+      note that there are <var>n</var>&nbsp;&minus;&nbsp;1 delimiters.</li>
+      <li>Each element should be printed with its own output operator, in particular nested containers should
+      be printed by recursively applying the above rules.</li>
+    </ul>
+
+    <p>The <em>cxx-prettyprint</em> library provides precisely this functionality. We are using the following default
+    settings for the delimiters (but see below for how to customize):</p>
+
+    <ul>
+      <li>The separating delimter is always &ldquo;<code>, </code>&rdquo; (comma, space).</li>
+      <li>Pairs and tuples are enclosed in round brackets (parentheses): <code>(1, foo)</code>.</li>
+      <li>Sets are enclosed in curly braces: <code>{1, 5, 11}</code>.</li>
+      <li>All other containers are enclosed in square brackets: <code>[1.4, -1.2, Inf, 88.6]</code>.</li>
+    </ul>
+    <p>These lexical conventions attempt to mimick popular mathematical notation for tuples, sets and vectors, respectively.</p>
+
+    <h3>Example</h3>
+    <p>Suppose we map integers to sets of strings.</p>
+    <div class="listing">typedef std::map&lt;int, std::set&lt;std::string&gt;&gt;; map_type;
+
+map_type foo = { { 1, { "cat", "dog", "doe"; } }, { 3, { "goose", "moose", "ruse" } } };
+
+std::cout << foo << std::endl;</div>
+    <p>The output would look like so:</p>
+    <div class="listing"></div>
 
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
