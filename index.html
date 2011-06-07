@@ -23,10 +23,8 @@
 
     <p>Please visit the <a href="https://github.com/louisdx/cxx-prettyprint">source code repository</a> on GitHub.</p>
 
-    <p><strong>Download:</strong> <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a>,
-    <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
-
-    <p><strong style="margin-right: 1em;">Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code></p>
+    <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a>,
+    or the <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a> or <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
     <h2>Quick start</h2>
 
@@ -46,6 +44,9 @@ int main()
 
   std::cout &lt;&lt; "My vector: " &lt;&lt; foo &lt;&lt; std::endl;
 }</div>
+
+    <p><strong>Note:</strong> This library relies on C++0x features. With gcc, pass the option <code>-std=c++0x</code>.
+    MS Visual Studio 10 does not support variadic templates, so you have to remove all code pertaining to tuples.</p>
 
     <h2>Description</h2>
 
