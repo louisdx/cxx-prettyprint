@@ -9,6 +9,16 @@ Synopsis:
   defaults are provided, but the behaviour (i.e. the delimiters) are
   compile-time customizable to a great extent via partial specializiation.
 
+Usage:
+  Just add "#include "prettyprint.hpp" to your source file and make sure
+  that prettyprint.hpp is findable.
+
+Example:
+  Some usage examples are provided by ppdemo.cpp.
+
+  Using GCC, compile with
+    g++ -W -Wall -pedantic -O2 -s -std=c++0x ppdemo.cpp -o ppdemo
+
 For details, please see the website (http://louisdx.github.com/cxx-prettyprint/).
 
 Language requirements: C++0x
