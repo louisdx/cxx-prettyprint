@@ -76,11 +76,12 @@ int main()
     <p>Suppose we map integers to sets of strings.</p>
     <div class="listing">typedef std::map&lt;int, std::set&lt;std::string&gt;&gt;; map_type;
 
-map_type foo = { { 1, { "cat", "dog", "doe"; } }, { 3, { "goose", "moose", "ruse" } } };
+map_type foo = { { 1, std::set&lt;std::string&gt;{ std::string("cat"),  std::string("dog"),  std::string("doe") } },
+                 { 3, std::set&lt;std::string&gt;{ std::string("goose"), std::string("moose"), std::string("ruse") } } };
 
 std::cout << foo << std::endl;</div>
     <p>The output would look like so:</p>
-    <div class="listing"></div>
+    <div class="listing">[(1, {cat, doe, dog}), (3, {goose, moose, ruse})]</div>
 
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
