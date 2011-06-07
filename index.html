@@ -9,9 +9,9 @@
       body { margin: 3em auto; max-width: 66em; padding: 0; line-height: 1.5em; }
       h2 { font-size: 1.25em; font-weight: bold; line-height: 1.25em; margin: 1em 0 .5em 0; padding: 0; }
       h1 { font-size: 2em; font-weight: bold; line-height: 1.25em; }
-      a:link, a:visited { color: maroon; text-decoration: none; border-bottom: 1px solid #DAA; }
+      a:link, a:visited { color: maroon; text-decoration: none; border-bottom: 1px dotted #DAA; }
       a:link:hover, a:visited:hover { color: white; border: none; background-color: maroon; }
-      code { margin: auto .5ex; background-color: #EEE; }
+      code { font-family: Consolas, "DejaVu Mono Sans", Courier, monospace; }
       p.footnote { font-size: .8em; line-height: 1em; }
       span.subtitle { font-size: .75em; font-weight: normal; font-style: italic; }
       div.listing { font-family: monospace; padding: 0 2em; white-space: pre; }
@@ -26,7 +26,32 @@
     <p><strong>Download:</strong> <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a>,
     <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
-    <p><strong>Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code> (see below)</p>
+    <p><strong style="margin-right: 1em;">Check out:</strong> <code>git clone git://github.com/louisdx/cxx-prettyprint</code> (see below)</p>
+
+    <h2>Quick Start</h2>
+
+    <p>Download <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a>
+    and place it in your source directory. Add <code>#include "prettyprint.hpp"</code> to your source file. You are ready!</p>
+
+    <div class="listing">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include "prettyprint.hpp"
+
+int main()
+{
+  std::vector&lt;int&gt; foo;
+  foo.push_back(1);
+  foo.push_back(2);
+  foo.push_back(3);
+
+  std::cout &lt;&lt; "My vector: " &lt;&lt; foo &lt;&lt; std::endl;
+}</div>
+
+    <h2>Description</h2>
+
+    <p><em>cxx-prettyprint</em> is a header-only library for C++ which provides printing via the &lt;&lt;-operator
+    for any container class.</p>
+
 
     <p>If you like to help out, just send me a message on <a href="https://github.com/louisdx/cxx-prettyprint">GitHub</a>,
     <a href="mailto:yoursecretsaresafe@googlemail.com">email me patches or suggestions</a>, or send pull requests.</p>
