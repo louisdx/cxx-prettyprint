@@ -280,12 +280,27 @@ namespace pretty_print
         typedef const T * const_iterator;
         typedef T value_type;
 
-        array_wrapper(const T (& a)[N]) : _array(a) { }
+        array_wrapper(const T (& a)[N]) : _array(static_cast<const T *>(a)) { }
         inline const_iterator begin() const { return _array; }
         inline const_iterator end() const { return _array + N; }
 
     private:
         const T * const _array;
+    };
+
+    template<typename T>
+    struct array_wrapper_n
+    {
+        typedef const T * const_iterator;
+        typedef T value_type;
+
+        array_wrapper_n(const T * const a, size_t n) : _array(a), _n(n) { }
+        inline const_iterator begin() const { return _array; }
+        inline const_iterator end() const { return _array + _n; }
+
+    private:
+        const T * const _array;
+        size_t _n;
     };
 } // namespace pretty_print
 
@@ -293,6 +308,12 @@ template<typename T, size_t N>
 inline pretty_print::array_wrapper<T, N> pretty_print_array(const T (& a)[N])
 {
     return pretty_print::array_wrapper<T, N>(a);
+}
+
+template<typename T>
+inline pretty_print::array_wrapper_n<T> pretty_print_array(const T * const a, size_t n)
+{
+  return pretty_print::array_wrapper_n<T>(a, n);
 }
 
 
