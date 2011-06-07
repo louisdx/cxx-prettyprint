@@ -11,7 +11,8 @@
 namespace std
 {
     // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-    template<typename T, typename TTraits, typename TAllocator> class set;
+    template<typename T, typename TComp, typename TAllocator> class set;
+    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
 }
 
 namespace pretty_print
@@ -66,12 +67,17 @@ namespace pretty_print
     template<typename T> const delimiters_values<wchar_t> delimiters<T, wchar_t>::values = { L"[", L", ", L"]" };
 
 
-    // Delimiters for set
+    // Delimiters for set and unordered_set
 
     template<typename T, typename TTraits, typename TAllocator> struct delimiters< ::std::set<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
     template<typename T, typename TTraits, typename TAllocator> const delimiters_values<char> delimiters< ::std::set<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
     template<typename T, typename TTraits, typename TAllocator> struct delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
     template<typename T, typename TTraits, typename TAllocator> const delimiters_values<wchar_t> delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator> struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char> { static const delimiters_values<char> values; };
+    template<typename T, typename THash, typename TEqual, typename TAllocator> const delimiters_values<char> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char>::values = { "{", ", ", "}" };
+    template<typename T, typename THash, typename TEqual, typename TAllocator> struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+    template<typename T, typename THash, typename TEqual, typename TAllocator> const delimiters_values<wchar_t> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
 
 
     // Delimiters for pair (reused for tuple, see below)
@@ -129,7 +135,7 @@ namespace pretty_print
         virtual ::std::wostream & stream(::std::wostream &) = 0;
     };
 
-    template <typename T, typename Delims>
+    template<typename T, typename Delims>
     struct custom_delims_wrapper : public custom_delims_base
     {
         custom_delims_wrapper(const T & t) : t(t) { }
@@ -147,10 +153,10 @@ namespace pretty_print
         const T & t;
     };
 
-    template <typename Delims>
+    template<typename Delims>
     struct custom_delims
     {
-        template <typename Container> custom_delims(const Container & c) : base(new custom_delims_wrapper<Container, Delims>(c)) { }
+        template<typename Container> custom_delims(const Container & c) : base(new custom_delims_wrapper<Container, Delims>(c)) { }
         ~custom_delims() { delete base; }
         custom_delims_base * base;
     };
@@ -158,7 +164,7 @@ namespace pretty_print
 } // namespace pretty_print
 
 
-template <typename TChar, typename TCharTraits, typename Delims>
+template<typename TChar, typename TCharTraits, typename Delims>
 inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & stream, const pretty_print::custom_delims<Delims> & p)
 {
     return p.base->stream(stream);
@@ -268,7 +274,7 @@ namespace std
 
 namespace pretty_print
 {
-    template <typename T, size_t N>
+    template<typename T, size_t N>
     struct array_wrapper
     {
         typedef const T * const_iterator;
@@ -283,7 +289,7 @@ namespace pretty_print
     };
 } // namespace pretty_print
 
-template <typename T, size_t N>
+template<typename T, size_t N>
 inline pretty_print::array_wrapper<T, N> pretty_print_array(const T (& a)[N])
 {
     return pretty_print::array_wrapper<T, N>(a);
