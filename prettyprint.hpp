@@ -114,9 +114,7 @@ namespace pretty_print
             {
                 stream << *it;
 
-                ++it;
-
-                if (it == end) break;
+                if (++it == end) break;
 
                 if (delimiters_type::values.delimiter != NULL)
                     stream << delimiters_type::values.delimiter;
