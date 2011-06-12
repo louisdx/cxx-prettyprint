@@ -25,10 +25,13 @@ namespace pretty_print
     struct is_container_helper
     {
     private:
-        template<typename C> static char test(typename C::const_iterator*);
-        template<typename C> static int  test(...);
+        typedef char                      one;
+        typedef struct { char array[2]; } two;
+
+        template<typename C> static one test(typename C::const_iterator*);
+        template<typename C> static two  test(...);
     public:
-        static const bool value = sizeof(test<T>(0)) == sizeof(char);
+        static const bool value = sizeof(test<T>(0)) == sizeof(one);
     };
 
 
@@ -107,12 +110,16 @@ namespace pretty_print
             if (delimiters_type::values.prefix != NULL)
                 stream << delimiters_type::values.prefix;
 
-            for (typename T::const_iterator beg = _container.begin(), end = _container.end(), it = beg; it != end; ++it)
+            for (typename T::const_iterator it = _container.begin(), end = _container.end(); ; )
             {
-                if (it != beg && delimiters_type::values.delimiter != NULL)
-                    stream << delimiters_type::values.delimiter;
-
                 stream << *it;
+
+                ++it;
+
+                if (it == end) break;
+
+                if (delimiters_type::values.delimiter != NULL)
+                    stream << delimiters_type::values.delimiter;
             }
 
             if (delimiters_type::values.postfix != NULL)
