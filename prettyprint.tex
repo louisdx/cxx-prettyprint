@@ -110,6 +110,8 @@ array size has to be passed explicitly to the wrapper function.
 
 \section*{Advanced Features: Customizing Delimiters}
 
+\paragraph{Note.} All interna of the library live in the namespace \texttt{pretty\_print}.\bigskip
+
 The only advanced feature of the library at this point is the ability to customize
 the delimiters used during printing. There are two ways to do this:
 \begin{itemize}
@@ -125,23 +127,57 @@ first approach and specialize the \texttt{delimiters} struct for your container
 type. On the other hand, if you have a set of delimiters that you only want to
 use in certain situations (but with any sort of container), create a helper class
 to hold your delimiters and invoke output with the \texttt{custom\_delims} function
-like this:\begin{center}\texttt{std::cout << pretty\_print::custom\_delims<MyDelims>(x) << std:;endl;}\end{center}
+like this:\begin{center}\texttt{std::cout << pretty\_print::custom\_delims<MyDelims>(x) << std::endl;}\end{center}
 
-\paragraph{Method 1: Specialize.}
+\subsection*{Method 1: Specialize.} The default delimiter class
+is: \begin{center}\texttt{template <typename T, typename TChar> struct
+pretty\_print::delimiters;}\end{center} All delimiter classes are
+templated on a character type \texttt{TChar}, which should match the
+desired output stream parameter (i.e.\ \texttt{char} for
+\texttt{ostream} and \texttt{wchar\_t} for \texttt{wostream}), and on
+the container type \texttt{T}. The class has a static member constant
+\texttt{values} of type \texttt{delimiters\_values<T, TChar>}, which itself is
+defined like this:
+\begin{verbatim}template<typename TChar> struct delimiters_values
+{
+    typedef TChar char_type;
+    const TChar * prefix;
+    const TChar * delimiter;
+    const TChar * postfix;
+};
+\end{verbatim}
+By providing an explicit or partial specialization of \texttt{delimiters},
+the delimiter parameters can be changed globally for a specific container
+type.
 
-\paragraph{Method 2: Custom delimiter class.}
+\paragraph{Example 1.} We specialize for \texttt{std::vector<double>}
+to print ``\texttt{((1.2; -3.4; 5.6))}''.
+\begin{verbatim}template <> const pretty_print::delimiters_values<char>
+pretty_print::delimiters<std::vector<double>, char>::values = { "((", "; ", "))" };
+\end{verbatim}
 
+\paragraph{Example 2.} We specialize for all \texttt{std::list<T>} to print ``\texttt{a--b--c}''.
+\begin{verbatim}template <typename T> const pretty_print::delimiters_values<char>
+pretty_print::delimiters<std::list<T>, char>::values = { "", "--", "" };
+\end{verbatim}
 
-%% \begin{verbatim}struct MyDelims
-%% {
-%%   static const pretty_print::delimiters_values<char> values;
-%% };
-%% const pretty_print::delimiters_values<char>
-%% MyDelims::values = { "<", "; ", ">" };
+\subsection*{Method 2: Custom delimiter class.}
 
-%% std::cout << pretty_print::custom_delims<MyDelims>(x) << std:;endl;
-%% \end{verbatim}
+Instead of providing specializations for the default delimiter class, we can also
+create our own delimiter class. It must provide a static member constant \texttt{values}
+just like the default class. For example:
+\begin{verbatim}struct HalfOpen
+{
+  static const pretty_print::delimiters_values<wchar_t> values;
+};
+const pretty_print::delimiters_values<wchar_t>
+HalfOpen::values = { L"[", L", L", ")" };
 
+std::wcout << pretty_print::custom_delims<HalfOpen>(x) << std::endl;
+\end{verbatim}
 
+\section*{Implementation}
+
+[To be written.]
 
 \end{document}
