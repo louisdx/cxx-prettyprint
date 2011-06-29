@@ -3,7 +3,7 @@
 
 
 #include <type_traits>
-#include <iostream>
+#include <ostream>
 #include <utility>
 #include <tuple>
 
@@ -12,7 +12,9 @@ namespace std
 {
     // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
     template<typename T, typename TComp, typename TAllocator> class set;
+    template<typename T, typename TComp, typename TAllocator> class multiset;
     template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
+    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
 }
 
 namespace pretty_print
@@ -70,17 +72,55 @@ namespace pretty_print
     template<typename T> const delimiters_values<wchar_t> delimiters<T, wchar_t>::values = { L"[", L", ", L"]" };
 
 
-    // Delimiters for set and unordered_set
+    // Delimiters for (multi)set and unordered_(multi)set
 
-    template<typename T, typename TTraits, typename TAllocator> struct delimiters< ::std::set<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
-    template<typename T, typename TTraits, typename TAllocator> const delimiters_values<char> delimiters< ::std::set<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
-    template<typename T, typename TTraits, typename TAllocator> struct delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
-    template<typename T, typename TTraits, typename TAllocator> const delimiters_values<wchar_t> delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+    template<typename T, typename TTraits, typename TAllocator>
+    struct delimiters< ::std::set<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
 
-    template<typename T, typename THash, typename TEqual, typename TAllocator> struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char> { static const delimiters_values<char> values; };
-    template<typename T, typename THash, typename TEqual, typename TAllocator> const delimiters_values<char> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char>::values = { "{", ", ", "}" };
-    template<typename T, typename THash, typename TEqual, typename TAllocator> struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
-    template<typename T, typename THash, typename TEqual, typename TAllocator> const delimiters_values<wchar_t> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+    template<typename T, typename TTraits, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::set<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    struct delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    struct delimiters< ::std::multiset<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::multiset<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    struct delimiters< ::std::multiset<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+
+    template<typename T, typename TTraits, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::multiset<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char> { static const delimiters_values<char> values; };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, char>::values = { "{", ", ", "}" };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    struct delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::unordered_set<T, THash, TEqual, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    struct delimiters< ::std::unordered_multiset<T, THash, TEqual, TAllocator>, char> { static const delimiters_values<char> values; };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::unordered_multiset<T, THash, TEqual, TAllocator>, char>::values = { "{", ", ", "}" };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    struct delimiters< ::std::unordered_multiset<T, THash, TEqual, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::unordered_multiset<T, THash, TEqual, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
 
 
     // Delimiters for pair (reused for tuple, see below)
@@ -110,6 +150,7 @@ namespace pretty_print
             if (delimiters_type::values.prefix != NULL)
                 stream << delimiters_type::values.prefix;
 
+            if (_container.begin() != _container.end())
             for (typename T::const_iterator it = _container.begin(), end = _container.end(); ; )
             {
                 stream << *it;
