@@ -20,26 +20,51 @@ namespace std
 namespace pretty_print
 {
 
-    // SFINAE type trait to detect a container based on whether T::const_iterator exists.
-    // (Improvement idea: check also if begin()/end() exist.)
+    // SFINAE type trait to detect whether T::const_iterator exists.
 
     template<typename T>
-    struct is_container_helper
+    struct has_const_iterator
     {
     private:
-        typedef char                      one;
-        typedef struct { char array[2]; } two;
+        typedef char                      yes;
+        typedef struct { char array[2]; } no;
 
-        template<typename C> static one test(typename C::const_iterator*);
-        template<typename C> static two  test(...);
+        template<typename C> static yes test(typename C::const_iterator*);
+        template<typename C> static no  test(...);
     public:
-        static const bool value = sizeof(test<T>(0)) == sizeof(one);
+        static const bool value = sizeof(test<T>(0)) == sizeof(yes);
+        typedef T type;
     };
 
+    // SFINAE type trait to detect whether "T::const_iterator T::begin/end() const" exist.
+
+    template <typename T>
+    struct has_begin_end
+    {
+        struct Dummy { typedef void const_iterator; };
+        typedef typename std::conditional<has_const_iterator<T>::value, T, Dummy>::type TType;
+        typedef typename TType::const_iterator iter;
+
+        struct Fallback { iter begin() const; iter end() const; };
+        struct Derived : TType, Fallback { };
+
+        template<typename C, C> struct ChT;
+
+        template<typename C> static char (&f(ChT<iter (Fallback::*)() const, &C::begin>*))[1];
+        template<typename C> static char (&f(...))[2];
+        template<typename C> static char (&g(ChT<iter (Fallback::*)() const, &C::end>*))[1];
+        template<typename C> static char (&g(...))[2];
+
+        static bool const beg_value = sizeof(f<Derived>(0)) == 2;
+        static bool const end_value = sizeof(g<Derived>(0)) == 2;
+    };
 
     // Basic is_container template; specialize to derive from std::true_type for all desired container types
 
-    template<typename T> struct is_container : public ::std::integral_constant<bool, is_container_helper<T>::value> { };
+    template<typename T> struct is_container : public ::std::integral_constant<bool,
+      has_const_iterator<T>::value && has_begin_end<T>::beg_value && has_begin_end<T>::end_value> { };
+
+    template<typename T, std::size_t N> struct is_container<T[N]> : public ::std::true_type { };
 
 
     // Holds the delimiter values for a specific character type
@@ -131,6 +156,12 @@ namespace pretty_print
     template<typename T1, typename T2> const delimiters_values<wchar_t> delimiters< ::std::pair<T1, T2>, wchar_t>::values = { L"(", L", ", L")" };
 
 
+    // Iterator microtrait class to handle C arrays uniformly
+
+    template <typename T> struct get_iterator { typedef typename T::const_iterator iter; };
+    template <typename T, std::size_t N> struct get_iterator<T[N]> { typedef const T * iter; };
+
+
     // Functor to print containers. You can use this directly if you want to specificy a non-default delimiters type.
 
     template<typename T, typename TChar = char, typename TCharTraits = ::std::char_traits<TChar>, typename TDelimiters = delimiters<T, TChar>>
@@ -139,6 +170,7 @@ namespace pretty_print
         typedef TChar char_type;
         typedef TDelimiters delimiters_type;
         typedef std::basic_ostream<TChar, TCharTraits> & ostream_type;
+        typedef typename get_iterator<T>::iter TIter;
 
         print_container_helper(const T & container)
         : _container(container)
@@ -150,8 +182,8 @@ namespace pretty_print
             if (delimiters_type::values.prefix != NULL)
                 stream << delimiters_type::values.prefix;
 
-            if (_container.begin() != _container.end())
-            for (typename T::const_iterator it = _container.begin(), end = _container.end(); ; )
+            if (std::begin(_container) != std::end(_container))
+            for (TIter it = std::begin(_container), end = std::end(_container); ; )
             {
                 stream << *it;
 
