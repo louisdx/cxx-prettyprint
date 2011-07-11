@@ -1,7 +1,7 @@
 \documentclass[a4paper,11pt]{article}
 
 \title{A Container Pretty-Printer for C++}
-\author{Louis Delacroix}
+\author{Louis ``Kerrek SB'' Delacroix et al.\thanks{See the ``Acknowledgements'' for a full list of contributors,}}
 \date{}
 
 \usepackage[margin=3cm]{geometry}
@@ -55,6 +55,14 @@ of mathematical notation, and we hope that they are both intuitive and
 
 Note that key-value containers are not treated specially, since their value
 type is simply \texttt{std::pair<key\_type, mapped\_type>}.
+
+\section*{Acknowledgements}
+
+Credits go to Marcelo Cantos for the initial approach, to Sven Groot
+for an improved, self-contained solution which became the foundation
+for this code, and to StackOverflow's Xeo for the tuple-printing code.
+This library would not have been possible without the support of these
+people.
 
 \section*{Installation and Usage}
 
