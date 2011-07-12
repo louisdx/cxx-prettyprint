@@ -35,6 +35,9 @@
     <p>We will try to incorporate some of STL&rsquo;s excellent ideas into this library, stay tuned.
     In the meantime, check out <a href="https://skydrive.live.com/redir.aspx?cid=e66e02dc83efb165&resid=E66E02DC83EFB165!292">his
     own pretty printer code</a>!</p>
+    <p><strong>Updates:</strong> Following STL&rsquo;s ideas, the library has now been improved
+    to support static arrays directly without the need for a wrapper. Also, the library should
+    now be usable in MS Visual Studio 2010.</p>
 
     <h2>Quick start</h2>
 
@@ -56,7 +59,9 @@ int main()
 }</div>
 
     <p><strong>Note:</strong> This library relies on C++0x features. With gcc, pass the option <code>-std=c++0x</code>.
-    MS Visual Studio 10 does not support variadic templates, so you have to remove all code pertaining to tuples.</p>
+    <span style="color: #999; text-decoration: line-through;">MS Visual Studio 2010 does not support variadic templates,
+    so you have to remove all code pertaining to tuples.</span> <strong>Update:</strong> MS Visual Studio 2010 is now
+    supported, thanks to the macro trick pointed out by STL.</p>
 
     <h2>Description</h2>
 
