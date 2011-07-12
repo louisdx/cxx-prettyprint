@@ -6,6 +6,7 @@
 #include <ostream>
 #include <utility>
 #include <tuple>
+#include <iterator>
 
 
 namespace std
@@ -325,20 +326,39 @@ namespace pretty_print
     template<typename Tuple, typename TChar, typename TCharTraits>
     struct pretty_tuple_helper<Tuple, 1, TChar, TCharTraits>
     {
-        static inline void print(::std::basic_ostream<TChar, TCharTraits> & stream, const Tuple & value) { stream << ::std::get<0>(value); }
+        static inline void print(::std::basic_ostream<TChar, TCharTraits> & stream, const Tuple & value)
+        {
+            stream << ::std::get<0>(value);
+        }
     };
 } // namespace pretty_print
 
 
+/* The following macros allow us to write "template <TUPLE_PARAMAS> std::tuple<TUPLE_ARGS>"
+ * uniformly in C++0x compilers and in MS Visual Studio 2010.
+ * Credits to STL: http://channel9.msdn.com/Shows/Going+Deep/C9-Lectures-Stephan-T-Lavavej-Advanced-STL-6-of-n
+ */
+
+#if defined(_MSC_VER) && _MSC_VER == 1600
+    #define TUPLE_PARAMS \
+        typename T0, typename T1, typename T2, typename T3, typename T4, \
+        typename T5, typename T6, typename T7, typename T8, typename T9
+    #define TUPLE_ARGS T0, T1, T2, T3, T4, T5, T6, T7, T8, T9
+#else
+    #define TUPLE_PARAMS typename ...Args
+    #define TUPLE_ARGS Args...
+#endif
+
+
 namespace std
 {
-    template<typename TChar, typename TCharTraits, typename ...Args>
-    inline basic_ostream<TChar, TCharTraits> & operator<<(basic_ostream<TChar, TCharTraits> & stream, const tuple<Args...> & value)
+    template<typename TChar, typename TCharTraits, TUPLE_PARAMS>
+    inline basic_ostream<TChar, TCharTraits> & operator<<(basic_ostream<TChar, TCharTraits> & stream, const tuple<TUPLE_ARGS> & value)
     {
         if (::pretty_print::delimiters< ::pretty_print::tuple_dummy_pair, TChar>::values.prefix != NULL)
             stream << ::pretty_print::delimiters< ::pretty_print::tuple_dummy_pair, TChar>::values.prefix;
 
-        ::pretty_print::pretty_tuple_helper<const tuple<Args...> &, sizeof...(Args), TChar, TCharTraits>::print(stream, value);
+        ::pretty_print::pretty_tuple_helper<const tuple<TUPLE_ARGS> &, tuple_size<tuple<TUPLE_ARGS>>::value, TChar, TCharTraits>::print(stream, value);
 
         if (::pretty_print::delimiters< ::pretty_print::tuple_dummy_pair, TChar>::values.postfix != NULL)
             stream << ::pretty_print::delimiters< ::pretty_print::tuple_dummy_pair, TChar>::values.postfix;
