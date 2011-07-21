@@ -103,9 +103,8 @@ int main(int argc, char * argv[])
   /* For dynamic arrays, we need a wrapper. */
   int * drr = new int[3]; drr[0] = drr[1] = drr[2] = 8;
 
-  std::cout << "C array: " << pretty_print_array(arr) << std::endl
-            << "C array direct: " << arr << std::endl
-            << "C array direct: " << err << std::endl
+  std::cout << "Static C array direct: " << arr << std::endl
+            << "Static C array direct: " << err << std::endl
             << "C dynamic array: " << pretty_print_array(drr, 3) << std::endl
             << "Pair:    " << a1 << std::endl
     //<< "1-tuple: " << a2 << std::endl

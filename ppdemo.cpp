@@ -99,9 +99,8 @@ int main(int argc, char * argv[])
   int arr[] = { 1, 4, 9, 16 };
   int err[] = { 2 };
 
-  std::cout << "C array: " << pretty_print_array(arr) << std::endl
-            << "C array direct: " << arr << std::endl
-            << "C array direct: " << err << std::endl
+  std::cout << "Static C array: " << arr << std::endl
+            << "Static C array: " << err << std::endl
             << "Pair:    " << a1 << std::endl
             << "1-tuple: " << a2 << std::endl
             << "n-tuple: " << a3 << std::endl

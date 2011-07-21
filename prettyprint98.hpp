@@ -80,6 +80,8 @@ namespace pretty_print
 
     template<typename T, std::size_t N> struct is_container<T[N]> { static const bool value = true; };
 
+    template<std::size_t N> struct is_container<char[N]> { static const bool value = false; };
+
 
     // Holds the delimiter values for a specific character type
 
@@ -389,20 +391,6 @@ namespace std
 
 namespace pretty_print
 {
-    template<typename T, size_t N>
-    struct array_wrapper
-    {
-        typedef const T * const_iterator;
-        typedef T value_type;
-
-        array_wrapper(const T (& a)[N]) : _array(static_cast<const T *>(a)) { }
-        inline const_iterator begin() const { return _array; }
-        inline const_iterator end() const { return _array + N; }
-
-    private:
-        const T * const _array;
-    };
-
     template<typename T>
     struct array_wrapper_n
     {
@@ -418,12 +406,6 @@ namespace pretty_print
         size_t _n;
     };
 } // namespace pretty_print
-
-template<typename T, size_t N>
-inline pretty_print::array_wrapper<T, N> pretty_print_array(const T (& a)[N])
-{
-    return pretty_print::array_wrapper<T, N>(a);
-}
 
 template<typename T>
 inline pretty_print::array_wrapper_n<T> pretty_print_array(const T * const a, size_t n)
