@@ -172,7 +172,7 @@ namespace pretty_print
     {
         typedef TChar char_type;
         typedef TDelimiters delimiters_type;
-        typedef std::basic_ostream<TChar, TCharTraits> & ostream_type;
+        typedef std::basic_ostream<TChar, TCharTraits> ostream_type;
         typedef typename get_iterator<T>::iter TIter;
 
         print_container_helper(const T & container)
