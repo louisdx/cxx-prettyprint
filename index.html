@@ -23,7 +23,7 @@
 
     <p>Please visit the <a href="https://github.com/louisdx/cxx-prettyprint">source code repository</a> on GitHub.</p>
 
-    <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a>,
+    <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a> (C++0x), <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint98.hpp</a> (C++98/03),
     or the <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a> or <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
     <h2>Breaking news (July 11, 2011)</h2>
@@ -37,7 +37,9 @@
     own pretty printer code</a>!</p>
     <p><strong>Updates:</strong> Following STL&rsquo;s ideas, the library has now been improved
     to support static arrays directly without the need for a wrapper. Also, the library should
-    now be usable in MS Visual Studio 2010.</p>
+    now be usable in MS Visual Studio 2010.</p><p>Furthermore, there is now a version that works
+    in C++98/03 compliant compilers. It uses TR1 tuples by default, but all dependence on TR1
+    libraries can be removed by defining <code>NO_TR1</code>.</p>
 
     <h2>Quick start</h2>
 
@@ -81,12 +83,12 @@ int main()
     settings for the delimiters (but see below for how to customize):</p>
 
     <ul>
-      <li>The separating delimter is always &ldquo;<code>, </code>&rdquo; (comma, space).</li>
+      <li>The separating delimiter is always &ldquo;<code>, </code>&rdquo; (comma, space).</li>
       <li>Pairs and tuples are enclosed in round brackets (parentheses): <code>(1, foo)</code>.</li>
       <li>Sets are enclosed in curly braces: <code>{1, 5, 11}</code>.</li>
       <li>All other containers are enclosed in square brackets: <code>[1.4, -1.2, Inf, 88.6]</code>.</li>
     </ul>
-    <p>These lexical conventions attempt to mimick popular mathematical notation for tuples, sets and vectors, respectively.</p>
+    <p>These lexical conventions attempt to mimic popular mathematical notation for tuples, sets and vectors, respectively.</p>
 
     <h3>Example</h3>
     <p>Suppose we map integers to sets of strings.</p>
@@ -174,6 +176,13 @@ const pretty_print::delimiters_values&lt;char> MyDelims::values = { "&lt;", "; "
     <p>The <code>custom_delims</code> helper class uses type-erasure to take an arbitrary container object
     and instantiate the correct template of the internal helper class with the user-provided delimiter class.</p>
 
+    <h2>Versions</h2>
+
+    There are two versions of the library: One for C++0x compliant compilers and MS Visual C++ 2010,
+    called &ldquo;prettyprint.hpp&rdquo;, and one for C++98/03 compliant compilers called &ldquo;prettyprint98.hpp&rdquo;.
+    The latter makes use of the TR1 libraries to support tuples, but this dependence (and support for tuples)
+    can be disabled by defining <code>NO_TR1</code>.
+
     <h2>Credits</h2>
 
     <p>This library is the product of many great contributions to my questions on StackOverflow and on Channel&nbsp;9.
@@ -187,7 +196,6 @@ const pretty_print::delimiters_values&lt;char> MyDelims::values = { "&lt;", "; "
 
     <p>Possible avenues for future improvements:</p>
     <ul>
-      <li>Make a version that works with C++98/03, e.g. by removing tuple support and pulling <code>enable_if</code> from <code>std::tr1</code>.</li>
       <li>Re-enable a pretty-printing output iterator as in Sven's <a href="http://stackoverflow.com/questions/4850473/pretty-print-c-stl-containers/6240947#6240947">original code</a>.</li>
       <li>Make customization of delimiters easier and nestable.</li>
       <li>Consider whether the <code>is_container</code> typetrait is too aggressive more carefully. Examples where this library breaks existing code are most appreciated!</li>
