@@ -40,7 +40,7 @@ namespace pretty_print
     // SFINAE type trait to detect whether "T::const_iterator T::begin/end() const" exist.
 
     template <typename T>
-    struct has_begin_end
+    struct has_begin_end_OLD
     {
         struct Dummy { typedef void const_iterator; };
         typedef typename std::conditional<has_const_iterator<T>::value, T, Dummy>::type TType;
@@ -58,6 +58,25 @@ namespace pretty_print
 
         static bool const beg_value = sizeof(f<Derived>(0)) == 2;
         static bool const end_value = sizeof(g<Derived>(0)) == 2;
+    };
+
+    template <typename T>
+    struct has_begin_end
+    {
+        template<typename C> static char (&f(typename std::enable_if<
+          std::is_same<decltype(static_cast<typename C::const_iterator (C::*)() const>(&C::begin)),
+          typename C::const_iterator(C::*)() const>::value, void>::type*))[1];
+
+        template<typename C> static char (&f(...))[2];
+
+        template<typename C> static char (&g(typename std::enable_if<
+          std::is_same<decltype(static_cast<typename C::const_iterator (C::*)() const>(&C::end)),
+          typename C::const_iterator(C::*)() const>::value, void>::type*))[1];
+
+        template<typename C> static char (&g(...))[2];
+
+        static bool const beg_value = sizeof(f<T>(0)) == 1;
+        static bool const end_value = sizeof(g<T>(0)) == 1;
     };
 
     // Basic is_container template; specialize to derive from std::true_type for all desired container types
