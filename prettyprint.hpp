@@ -204,15 +204,25 @@ namespace pretty_print
             if (delimiters_type::values.prefix != NULL)
                 stream << delimiters_type::values.prefix;
 
-            if (std::begin(_container) != std::end(_container))
-            for (TIter it = std::begin(_container), end = std::end(_container); ; )
             {
-                stream << *it;
+                using std::begin;
+                using std::end;
 
-                if (++it == end) break;
+                TIter it = begin(_container);
+                const TIter the_end = end(_container);
 
-                if (delimiters_type::values.delimiter != NULL)
-                    stream << delimiters_type::values.delimiter;
+                if (it != the_end)
+                {
+                    for ( ; ; )
+                    {
+                        stream << *it;
+
+                    if (++it == the_end) break;
+
+                    if (delimiters_type::values.delimiter != NULL)
+                        stream << delimiters_type::values.delimiter;
+                    }
+                }
             }
 
             if (delimiters_type::values.postfix != NULL)
