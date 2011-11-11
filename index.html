@@ -126,10 +126,10 @@ std::cout &lt;&lt; arr &lt;&lt; std::endl;</div>
 
     <div class="listing">std::unordered_map&lt;std::string, int&gt; m;
 fill_map(m); // populate map
-    for (unsigned int i = 0; i != m.bucket_count(); ++i)
-    {
-      std::cout &lt;&lt; "Bucket " &lt;&lt; i &lt;&lt; ": " &lt;&lt; bucket_print(m, i) &lt;&lt; std::endl;
-    }</div>
+for (unsigned int i = 0; i != m.bucket_count(); ++i)
+{
+  std::cout &lt;&lt; "Bucket " &lt;&lt; i &lt;&lt; ": " &lt;&lt; bucket_print(m, i) &lt;&lt; std::endl;
+}</div>
 
 
     <h2>Advanced usage: Customizing the delimiters</h2>
