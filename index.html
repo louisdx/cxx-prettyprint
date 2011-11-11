@@ -124,11 +124,11 @@ std::cout &lt;&lt; arr &lt;&lt; std::endl;</div>
 
     <p>Individual buckets may be printed with the wrapper <code>bucket_print</code>, used as follows:</p>
 
-    <div class="listing">std::unordered_map<std::string, int> m;
+    <div class="listing">std::unordered_map&lt;std::string, int&gt; m;
 fill_map(m); // populate map
     for (unsigned int i = 0; i != m.bucket_count(); ++i)
     {
-      std::cout << "Bucket " << i << ": " << bucket_print(m, i) << std::endl;
+      std::cout &lt;&lt; "Bucket " &lt;&lt; i &lt;&lt; ": " &lt;&lt; bucket_print(m, i) &lt;&lt; std::endl;
     }</div>
 
 
