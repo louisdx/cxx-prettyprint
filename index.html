@@ -26,6 +26,11 @@
     <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a> (C++0x), <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint98.hpp</a> (C++98/03),
     or the <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a> or <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
+    <h2>Updates</h2>
+    <p>Nov. 2011: There is now a new wrapper <code>bucket_print</code>, which iterates
+    only over one <em>bucket</em> of containers based on hash tables (such as the <code>unordered_*</code>
+    containers in the standard library). See below for details.</p>
+
     <h2>Breaking news (July 11, 2011)</h2>
 
     <p>We are thrilled to announce that the indomitable <em>Stephan T Lavavej</em> has
@@ -109,6 +114,23 @@ std::cout &lt;&lt; foo &lt;&lt; std::endl;</div>
 std::cout &lt;&lt; arr &lt;&lt; std::endl;</div>
 
     <p>However, if the array size is not known at compile time, a wrapper may be invoked via <code>pretty_print_array(arr, size)</code>.</p>
+
+    <h2>Hash containers</h2>
+
+    <p>Certain containers based on hash tables offer an additional interface to the internal <em>buckets</em> of the hash
+    table. This interface comes in the form of <em>local</em> iterators, accessed via <code>begin(n)</code> and <code>end(n)</code>,
+    where <code>n</code> indicates the bucket number. Examples of such containers are the <code>unordered_*</code> containers
+    from the standard libray.</p>
+
+    <p>Individual buckets may be printed with the wrapper <code>bucket_print</code>, used as follows:</p>
+
+    <div class="listing">std::unordered_map<std::string, int> m;
+fill_map(m); // populate map
+    for (unsigned int i = 0; i != m.bucket_count(); ++i)
+    {
+      std::cout << "Bucket " << i << ": " << bucket_print(m, i) << std::endl;
+    }</div>
+
 
     <h2>Advanced usage: Customizing the delimiters</h2>
 
