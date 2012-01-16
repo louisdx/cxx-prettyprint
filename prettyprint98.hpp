@@ -115,29 +115,29 @@ namespace pretty_print
 
     // Delimiters for (multi)set and unordered_(multi)set
 
-    template<typename T, typename TTraits, typename TAllocator>
-    struct delimiters< ::std::set<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
+    template<typename T, typename TComp, typename TAllocator>
+    struct delimiters< ::std::set<T, TComp, TAllocator>, char> { static const delimiters_values<char> values; };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    const delimiters_values<char> delimiters< ::std::set<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
+    template<typename T, typename TComp, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::set<T, TComp, TAllocator>, char>::values = { "{", ", ", "}" };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    struct delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+    template<typename T, typename TComp, typename TAllocator>
+    struct delimiters< ::std::set<T, TComp, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    const delimiters_values<wchar_t> delimiters< ::std::set<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+    template<typename T, typename TComp, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::set<T, TComp, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    struct delimiters< ::std::multiset<T, TTraits, TAllocator>, char> { static const delimiters_values<char> values; };
+    template<typename T, typename TComp, typename TAllocator>
+    struct delimiters< ::std::multiset<T, TComp, TAllocator>, char> { static const delimiters_values<char> values; };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    const delimiters_values<char> delimiters< ::std::multiset<T, TTraits, TAllocator>, char>::values = { "{", ", ", "}" };
+    template<typename T, typename TComp, typename TAllocator>
+    const delimiters_values<char> delimiters< ::std::multiset<T, TComp, TAllocator>, char>::values = { "{", ", ", "}" };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    struct delimiters< ::std::multiset<T, TTraits, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
+    template<typename T, typename TComp, typename TAllocator>
+    struct delimiters< ::std::multiset<T, TComp, TAllocator>, wchar_t> { static const delimiters_values<wchar_t> values; };
 
-    template<typename T, typename TTraits, typename TAllocator>
-    const delimiters_values<wchar_t> delimiters< ::std::multiset<T, TTraits, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
+    template<typename T, typename TComp, typename TAllocator>
+    const delimiters_values<wchar_t> delimiters< ::std::multiset<T, TComp, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
 
 #ifndef NO_TR1
     template<typename T, typename THash, typename TEqual, typename TAllocator>
