@@ -19,8 +19,8 @@ namespace std
 #ifndef NO_TR1
     namespace tr1
     {
-        template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
-        template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
+        template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_set;
+        template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_multiset;
     }
 #endif
 }
