@@ -1,24 +1,30 @@
 #ifndef H_PRETTY_PRINT
 #define H_PRETTY_PRINT
+
 #include <ostream>
 #include <utility>
 #include <iterator>
 #ifndef NO_TR1
 #include <tr1/tuple>
 #endif
+
 namespace std
 {
 // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-template<typename T, typename TComp, typename TAllocator> class set;
-template<typename T, typename TComp, typename TAllocator> class multiset;
+    template<typename T, typename TComp, typename TAllocator> class set;
+    template<typename T, typename TComp, typename TAllocator> class multiset;
 #ifndef NO_TR1
 namespace tr1
 {
-template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_set;
-template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_multiset;
+    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
+    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
+
+    template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_set;
+    template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_multiset;
 }
 #endif
 }
+
 namespace pretty_print
 {
 template <bool, typename S, typename T> struct conditional { };
