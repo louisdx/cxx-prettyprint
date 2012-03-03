@@ -71,7 +71,7 @@ int main(int argc, char * argv[])
     a[2] = a[3] = 'l';
     a[4] = 'o';
     std::cout << "Vector: " << v << std::endl                // vector of strings
-              << "Incremental vector: " << vv << std::endl   // nestes vector of vectors
+              << "Incremental vector: " << vv << std::endl   // nested vector of vectors
               << "Pairs: " << vp << std::endl                // vector of pairs
               << "Another vector: " << vd << std::endl       // vector of doubles using Customization #1
               << "Set: " << ss << std::endl                  // set of strings, using partially specialized default set delimiters
