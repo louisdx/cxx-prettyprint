@@ -10,17 +10,23 @@
 
 namespace std
 {
-// Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-    template<typename T, typename TComp, typename TAllocator> class set;
-    template<typename T, typename TComp, typename TAllocator> class multiset;
+    // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
+	template<typename T, typename TComp, typename TAllocator> class set;
+	template<typename T, typename TComp, typename TAllocator> class multiset;
 #ifndef NO_TR1
+#define GCC_VERSION (__GNUC__ * 10000 \
+					+ __GNUC_MINOR__ * 100 \
+					+ __GNUC_PATCHLEVEL__)
 namespace tr1
 {
-    /*template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
-    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;*/
-
-    /*template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_set;
-    template<typename T, typename THash, typename TEqual, typename TAllocator, bool __cache_hash_code> class unordered_multiset;*/
+	/* Test for GCC >= 4.3.0 */
+	#if GCC_VERSION >= 40300
+		template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
+		template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
+	#else
+		template<typename T, typename THash, typename TEqual, typename TAllocator, bool> class unordered_set;
+		template<typename T, typename THash, typename TEqual, typename TAllocator, bool> class unordered_multiset;
+	#endif
 }
 #endif
 }
