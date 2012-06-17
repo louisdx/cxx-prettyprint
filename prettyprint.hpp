@@ -248,7 +248,7 @@ namespace pretty_print
     template<typename T, typename Delims>
     struct custom_delims_wrapper : public custom_delims_base
     {
-        custom_delims_wrapper(const T & t) : t(t) { }
+        custom_delims_wrapper(const T & t_) : t(t_) { }
 
         ::std::ostream & stream(::std::ostream & stream)
         {
