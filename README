@@ -26,3 +26,5 @@ For the C++98/03-version, define "NO_TR1" to prevent any inclusion of
 TR1 headers and to disable std::tr1::tuple support.
 
 For details, please see the website (http://louisdx.github.com/cxx-prettyprint/).
+
+License: Boost Software License, Version 1.0. See http://www.boost.org/LICENSE_1_0.txt.
