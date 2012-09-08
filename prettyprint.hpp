@@ -18,10 +18,11 @@
 namespace std
 {
     // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-    template<typename T, typename TComp, typename TAllocator> class set;
-    template<typename T, typename TComp, typename TAllocator> class multiset;
-    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
-    template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
+    template <typename T, typename TComp, typename TAllocator> class set;
+    template <typename T, typename TComp, typename TAllocator> class multiset;
+    template <typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
+    template <typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
+    template <typename T> class valarray;
 }
 
 namespace pretty_print
@@ -36,8 +37,8 @@ namespace pretty_print
         typedef char                      yes;
         typedef struct { char array[2]; } no;
 
-        template<typename C> static yes test(typename C::const_iterator*);
-        template<typename C> static no  test(...);
+        template <typename C> static yes test(typename C::const_iterator*);
+        template <typename C> static no  test(...);
     public:
         static const bool value = sizeof(test<T>(0)) == sizeof(yes);
         typedef T type;
@@ -93,6 +94,8 @@ namespace pretty_print
     template<typename T, std::size_t N> struct is_container<T[N]> : public ::std::true_type { };
 
     template<std::size_t N> struct is_container<char[N]> : public ::std::false_type { };
+
+    template <typename T> struct is_container< ::std::valarray<T>> : public ::std::true_type { };
 
 
     // Holds the delimiter values for a specific character type
@@ -184,12 +187,6 @@ namespace pretty_print
     template<typename T1, typename T2> const delimiters_values<wchar_t> delimiters< ::std::pair<T1, T2>, wchar_t>::values = { L"(", L", ", L")" };
 
 
-    // Iterator microtrait class to handle C arrays uniformly
-
-    template <typename T> struct get_iterator { typedef typename T::const_iterator iter; };
-    template <typename T, std::size_t N> struct get_iterator<T[N]> { typedef const T * iter; };
-
-
     // Functor to print containers. You can use this directly if you want to specificy a non-default delimiters type.
 
     template<typename T, typename TChar = char, typename TCharTraits = ::std::char_traits<TChar>, typename TDelimiters = delimiters<T, TChar>>
@@ -198,7 +195,6 @@ namespace pretty_print
         typedef TChar char_type;
         typedef TDelimiters delimiters_type;
         typedef std::basic_ostream<TChar, TCharTraits> ostream_type;
-        typedef typename get_iterator<T>::iter TIter;
 
         print_container_helper(const T & container)
         : _container(container)
@@ -214,8 +210,8 @@ namespace pretty_print
                 using std::begin;
                 using std::end;
 
-                TIter it = begin(_container);
-                const TIter the_end = end(_container);
+                auto it = begin(_container);
+                const auto the_end = end(_container);
 
                 if (it != the_end)
                 {

@@ -10,6 +10,7 @@
 #include <set>
 #include <array>
 #include <tuple>
+#include <valarray>
 #include <utility>
 #include <string>
 #include <sstream>
@@ -68,6 +69,7 @@ int main(int argc, char * argv[])
   /* Demo: pretty-printing for various containers. */
 
   std::array<char, 5> a{{ 'h', 'e', 'l', 'l', 'o' }};
+  std::valarray<double> va { 1.0, -0.5, 0.25, -0.125 };
 
   std::cout << "Vector: " << v << std::endl                // vector of strings
             << "Incremental vector: " << vv << std::endl   // nestes vector of vectors
@@ -78,6 +80,7 @@ int main(int argc, char * argv[])
             << "UMap: " << um << std::endl                 // ditto
             << "String: " << cs << std::endl               // just a plain string, note that std::string has begin()/end()
             << "Array: " << a << std::endl                 // an std::array
+            << "Valarray: " << va << std::endl              // an std::valarray
   ;
 
   /* Demo: Here we use our reusable delimiter class MyDelims by directly accessing some interna. */
