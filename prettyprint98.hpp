@@ -11,25 +11,12 @@
 #include <ostream>
 #include <utility>
 #include <iterator>
+#include <set>
 
 #ifndef NO_TR1
 #  include <tr1/tuple>
+#  include <tr1/unordered_set>
 #endif
-
-namespace std
-{
-    // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-    template<typename T, typename TComp, typename TAllocator> class set;
-    template<typename T, typename TComp, typename TAllocator> class multiset;
-
-#ifndef NO_TR1
-    namespace tr1
-    {
-        template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
-        template<typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
-    }
-#endif
-}
 
 namespace pretty_print
 {
