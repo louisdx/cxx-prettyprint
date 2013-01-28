@@ -19,6 +19,17 @@
 namespace pretty_print
 {
 
+    // Let's print strings in quotes. If user don't want it he can define DONT_QUOTE_STRINGS
+    template< typename T > constexpr bool need_quote( const T & )
+    {
+        #ifndef DONT_QUOTE_STRINGS
+            typedef typename std::remove_const< typename std::remove_reference< T >::type >::type value_t;
+            return std::is_same< value_t, std::string >::value || std::is_same< value_t, std::wstring >::value;
+        #else
+            return false;
+        #endif
+    }
+
     // SFINAE type trait to detect whether T::const_iterator exists.
 
     template<typename T>
@@ -206,9 +217,10 @@ namespace pretty_print
 
                 if (it != the_end)
                 {
+                    const char * quote = pretty_print::need_quote( *it ) ? "\"" : "";
                     for ( ; ; )
                     {
-                        stream << *it;
+                        stream << quote << *it << quote;
 
                     if (++it == the_end) break;
 
@@ -311,12 +323,14 @@ namespace std
         if (::pretty_print::delimiters<pair<T1, T2>, TChar>::values.prefix != NULL)
             stream << ::pretty_print::delimiters<pair<T1, T2>, TChar>::values.prefix;
 
-        stream << value.first;
+        const char * quote1 = pretty_print::need_quote( value.first ) ? "\"" : "";
+        stream << quote1 << value.first << quote1;
 
         if (::pretty_print::delimiters<pair<T1, T2>, TChar>::values.delimiter != NULL)
             stream << ::pretty_print::delimiters<pair<T1, T2>, TChar>::values.delimiter;
 
-        stream << value.second;
+        const char * quote2 = pretty_print::need_quote( value.second ) ? "\"" : "";
+        stream << quote2 << value.second << quote2;
 
         if (::pretty_print::delimiters<pair<T1, T2>, TChar>::values.postfix != NULL)
             stream << ::pretty_print::delimiters<pair<T1, T2>, TChar>::values.postfix;
@@ -343,7 +357,8 @@ namespace pretty_print
             if (delimiters<tuple_dummy_pair, TChar>::values.delimiter != NULL)
                 stream << delimiters<tuple_dummy_pair, TChar>::values.delimiter;
 
-            stream << std::get<N - 1>(value);
+            const char * quote = pretty_print::need_quote( std::get<N - 1>(value) ) ? "\"" : "";
+            stream << quote << std::get<N - 1>(value) << quote;
         }
     };
 
@@ -352,7 +367,8 @@ namespace pretty_print
     {
         static inline void print(::std::basic_ostream<TChar, TCharTraits> & stream, const Tuple & value)
         {
-            stream << ::std::get<0>(value);
+            const char * quote = pretty_print::need_quote( std::get<0>(value) ) ? "\"" : "";
+            stream << quote << ::std::get<0>(value) << quote;
         }
     };
 } // namespace pretty_print
