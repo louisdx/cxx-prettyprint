@@ -13,17 +13,8 @@
 #include <utility>
 #include <tuple>
 #include <iterator>
-
-
-namespace std
-{
-    // Pre-declarations of container types so we don't actually have to include the relevant headers if not needed, speeding up compilation time.
-    template <typename T, typename TComp, typename TAllocator> class set;
-    template <typename T, typename TComp, typename TAllocator> class multiset;
-    template <typename T, typename THash, typename TEqual, typename TAllocator> class unordered_set;
-    template <typename T, typename THash, typename TEqual, typename TAllocator> class unordered_multiset;
-    template <typename T> class valarray;
-}
+#include <set>
+#include <unordered_set>
 
 namespace pretty_print
 {
