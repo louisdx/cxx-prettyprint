@@ -15,6 +15,7 @@
 #include <iterator>
 #include <set>
 #include <unordered_set>
+#include <valarray>
 
 namespace pretty_print
 {
