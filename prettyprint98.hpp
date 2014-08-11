@@ -1,4 +1,4 @@
-//          Copyright Louis Delacroix 2010 - 2012.
+//          Copyright Louis Delacroix 2010 - 2014.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -233,13 +233,13 @@ namespace pretty_print
     {
         custom_delims_wrapper(const T & t_) : t(t_) { }
 
-        ::std::ostream & stream(::std::ostream & stream)
+        ::std::ostream & stream(::std::ostream & s)
         {
-          return stream << ::pretty_print::print_container_helper<T, char, ::std::char_traits<char>, Delims>(t);
+          return s << ::pretty_print::print_container_helper<T, char, ::std::char_traits<char>, Delims>(t);
         }
-        ::std::wostream & stream(::std::wostream & stream)
+        ::std::wostream & stream(::std::wostream & s)
         {
-          return stream << ::pretty_print::print_container_helper<T, wchar_t, ::std::char_traits<wchar_t>, Delims>(t);
+          return s << ::pretty_print::print_container_helper<T, wchar_t, ::std::char_traits<wchar_t>, Delims>(t);
         }
 
     private:

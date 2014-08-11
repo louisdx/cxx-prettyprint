@@ -91,7 +91,7 @@ int main(int argc, char * argv[])
      (You already saw pairs in the associative containers above.)
   */
   std::pair<std::string, int> a1 = std::make_pair(std::string("Jello"), 9);
-  std::tr1::tuple<int> a2 = std::tr1::make_tuple(1729);
+  //std::tr1::tuple<int> a2 = std::tr1::make_tuple(1729);
   std::tr1::tuple<std::string, std::tr1::tuple<std::string, int>, int> a3 = std::tr1::make_tuple("Qrgh", a1, 11);
   std::tr1::tuple<int, int, std::pair<double, std::string> > a4 = std::tr1::make_tuple(1729, 2875, std::pair<double, std::string>(1.5, "abc"));
 
