@@ -257,9 +257,9 @@ namespace pretty_print
 } // namespace pretty_print
 
 template<typename TChar, typename TCharTraits, typename Delims>
-inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & stream, const pretty_print::custom_delims<Delims> & p)
+inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & s, const pretty_print::custom_delims<Delims> & p)
 {
-    return p.base->stream(stream);
+    return p.base->stream(s);
 }
 
 // Template aliases for char and wchar_t delimiters

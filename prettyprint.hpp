@@ -1,4 +1,4 @@
-//          Copyright Louis Delacroix 2010 - 2012.
+//          Copyright Louis Delacroix 2010 - 2014.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 
 
 #include <type_traits>
+#include <memory>
 #include <ostream>
 #include <utility>
 #include <tuple>
@@ -244,13 +245,13 @@ namespace pretty_print
     {
         custom_delims_wrapper(const T & t_) : t(t_) { }
 
-        ::std::ostream & stream(::std::ostream & stream)
+        ::std::ostream & stream(::std::ostream & s)
         {
-          return stream << ::pretty_print::print_container_helper<T, char, ::std::char_traits<char>, Delims>(t);
+          return s << ::pretty_print::print_container_helper<T, char, ::std::char_traits<char>, Delims>(t);
         }
-        ::std::wostream & stream(::std::wostream & stream)
+        ::std::wostream & stream(::std::wostream & s)
         {
-          return stream << ::pretty_print::print_container_helper<T, wchar_t, ::std::char_traits<wchar_t>, Delims>(t);
+          return s << ::pretty_print::print_container_helper<T, wchar_t, ::std::char_traits<wchar_t>, Delims>(t);
         }
 
     private:
@@ -260,18 +261,20 @@ namespace pretty_print
     template<typename Delims>
     struct custom_delims
     {
-        template<typename Container> custom_delims(const Container & c) : base(new custom_delims_wrapper<Container, Delims>(c)) { }
-        ~custom_delims() { delete base; }
-        custom_delims_base * base;
+        template<typename Container>
+        custom_delims(const Container & c)
+        : base(new custom_delims_wrapper<Container, Delims>(c)) { }
+
+        std::unique_ptr<custom_delims_base> base;
     };
 
 } // namespace pretty_print
 
 
 template<typename TChar, typename TCharTraits, typename Delims>
-inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & stream, const pretty_print::custom_delims<Delims> & p)
+inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & s, const pretty_print::custom_delims<Delims> & p)
 {
-    return p.base->stream(stream);
+    return p.base->stream(s);
 }
 
 
