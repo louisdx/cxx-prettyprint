@@ -23,10 +23,15 @@
 
     <p>Please visit the <a href="https://github.com/louisdx/cxx-prettyprint">source code repository</a> on GitHub.</p>
 
-    <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a> (C++0x), <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint98.hpp</a> (C++98/03),
+    <p><strong>Download:</strong> <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint.hpp</a> (C++11), <a href="https://raw.github.com/louisdx/cxx-prettyprint/master/prettyprint.hpp">prettyprint98.hpp</a> (C++98/03),
     or the <a href="http://github.com/louisdx/cxx-prettyprint/zipball/master">zip ball</a> or <a href="http://github.com/louisdx/cxx-prettyprint/tarball/master">tar.gz ball</a>.</p>
 
     <h2>Updates</h2>
+    <p>Aug. 2014: Some refactoring of the C++11 code. Tuples and pairs are now containers, and the special
+    logic has been moved into a dedicated template used for printing the container body. This removes several
+    dodgy overloads from the namespace std. Some old code and comments have also been removed, and more demo
+    cases added.</p>
+
     <p>Nov. 2011: There is now a new wrapper <code>bucket_print</code>, which iterates
     only over one <em>bucket</em> of containers based on hash tables (such as the <code>unordered_*</code>
     containers in the standard library). See below for details.</p>
@@ -65,10 +70,7 @@ int main()
   std::cout &lt;&lt; "My vector: " &lt;&lt; foo &lt;&lt; std::endl;
 }</div>
 
-    <p><strong>Note:</strong> This library relies on C++0x features. With gcc, pass the option <code>-std=c++0x</code>.
-    <span style="color: #999; text-decoration: line-through;">MS Visual Studio 2010 does not support variadic templates,
-    so you have to remove all code pertaining to tuples.</span> <strong>Update:</strong> MS Visual Studio 2010 is now
-    supported, thanks to the macro trick pointed out by STL.</p>
+    <p><strong>Note:</strong> This library relies on C++11 features. With gcc, pass the option <code>-std=c++11</code>.</p>
 
     <h2>Description</h2>
 
