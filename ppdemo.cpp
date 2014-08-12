@@ -95,6 +95,7 @@ int main(int argc, char * argv[])
   auto a2 = std::make_tuple(1729);
   auto a3 = std::make_tuple("Qrgh", a1, 11);
   auto a4 = std::make_tuple(1729, 2875, std::pair<double, std::string>(1.5, "abc"));
+  std::tuple<> a5;
 
   /* Demo: Here we achieve the same using a type-erasing helper class. */
   std::cout << "Custom, type-erased delimiters: "
@@ -112,6 +113,7 @@ int main(int argc, char * argv[])
             << "Static C array: " << err << std::endl
             << "Static C array with length: " << pretty_print_array(arr + 1, 2) << std::endl
             << "Pair:    " << a1 << std::endl
+            << "0-tuple: " << a5 << std::endl
             << "1-tuple: " << a2 << std::endl
             << "n-tuple: " << a3 << std::endl
             << "n-tuple: " << a4 << std::endl
