@@ -84,10 +84,9 @@ int main(int argc, char * argv[])
   ;
 
   /* Demo: Here we use our reusable delimiter class MyDelims by directly accessing some interna. */
-  std::cout << pretty_print::print_container_helper<std::vector<std::string>, char, std::char_traits<char>, MyDelims>(v) << std::endl;
-
-  /* Demo: Here we achieve the same using a type-erasing helper class. */
-  std::cout << pretty_print::custom_delims<MyDelims>(v) << std::endl;
+  std::cout << "Reusable delimiters: "
+            << pretty_print::print_container_helper<std::vector<std::string>, char, std::char_traits<char>, MyDelims>(v)
+            << std::endl;
 
   /* Demo: We can pretty-print std::pair and std::tuple.
      (You already saw pairs in the associative containers above.)
@@ -97,6 +96,13 @@ int main(int argc, char * argv[])
   auto a3 = std::make_tuple("Qrgh", a1, 11);
   auto a4 = std::make_tuple(1729, 2875, std::pair<double, std::string>(1.5, "abc"));
 
+  /* Demo: Here we achieve the same using a type-erasing helper class. */
+  std::cout << "Custom, type-erased delimiters: "
+            << pretty_print::custom_delims<MyDelims>(v) << std::endl;
+  std::cout << "Custom, type-erased delimiters: "
+            << pretty_print::custom_delims<MyDelims>(a2) << std::endl;
+  std::cout << "Custom, type-erased delimiters: "
+            << pretty_print::custom_delims<MyDelims>(a3) << std::endl;
 
   /* Demo: raw arrays can be printed with a helper wrapper. */
   int arr[] = { 1, 4, 9, 16 };
@@ -104,9 +110,11 @@ int main(int argc, char * argv[])
 
   std::cout << "Static C array: " << arr << std::endl
             << "Static C array: " << err << std::endl
+            << "Static C array with length: " << pretty_print_array(arr + 1, 2) << std::endl
             << "Pair:    " << a1 << std::endl
             << "1-tuple: " << a2 << std::endl
             << "n-tuple: " << a3 << std::endl
             << "n-tuple: " << a4 << std::endl
+            << "Hashmap bucket: " << bucket_print(um, 0) << std::endl
   ;
 }
