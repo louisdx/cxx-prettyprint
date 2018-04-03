@@ -18,7 +18,7 @@
 #include <tr1/array>
 #include <tr1/tuple>
 
-#include "prettyprint98.hpp"
+#include "prettyprint.hpp"
 
 /* Customization option 1: Direct partial/full specialization.
    Here we specialize for std::vector<double>.

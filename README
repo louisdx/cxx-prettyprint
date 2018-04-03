@@ -13,8 +13,6 @@ Usage:
   Just add "#include "prettyprint.hpp" to your source file and make sure
   that prettyprint.hpp is findable.
 
-Language requirements: C++0x for prettyprint.hpp, C++98/03 for prettyprint98.hpp
-
 Example:
   Some usage examples are provided by ppdemo.cpp.
 
@@ -22,7 +20,7 @@ Example:
     g++ -W -Wall -pedantic -O2 -s ppdemo.cpp -o ppdemo -std=c++0x 
     g++ -W -Wall -pedantic -O2 -s ppdemo98.cpp -o ppdemo98
 
-For the C++98/03-version, define "NO_TR1" to prevent any inclusion of
+For C++98/03, define "NO_TR1" to prevent any inclusion of
 TR1 headers and to disable std::tr1::tuple support.
 
 For details, please see the website (http://louisdx.github.com/cxx-prettyprint/).
