@@ -22,6 +22,10 @@
 #include <utility>
 #include <valarray>
 
+#ifdef __cpp_lib_optional
+#include <optional>
+#endif
+
 namespace pretty_print
 {
     namespace detail
@@ -80,6 +84,10 @@ namespace pretty_print
         const char_type * prefix;
         const char_type * delimiter;
         const char_type * postfix;
+        const char_type * nullopt;
+
+        delimiters_values(const char_type * prefix_, const char_type * delimiter_, const char_type * postfix_, const char_type * nullopt_ = nullptr)
+            : prefix(prefix_), delimiter(delimiter_), postfix(postfix_), nullopt(nullopt_) { }
     };
 
 
@@ -207,6 +215,26 @@ namespace pretty_print
         }
     };
 
+#ifdef __cpp_lib_optional
+    // Specialization for optional
+
+    template <typename T, typename TChar, typename TCharTraits, typename TDelimiters>
+    template <typename T1>
+    struct print_container_helper<T, TChar, TCharTraits, TDelimiters>::printer<std::optional<T1>>
+    {
+        using ostream_type = typename print_container_helper<T, TChar, TCharTraits, TDelimiters>::ostream_type;
+
+        static void print_body(const std::optional<T1> & c, ostream_type & stream)
+        {
+            if(c) {
+                stream << *c;
+            } else if (print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.nullopt != NULL) {
+                stream << print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.nullopt;
+            }
+        }
+    };
+#endif
+
     // Prints a print_container_helper to the specified stream.
 
     template<typename T, typename TChar, typename TCharTraits, typename TDelimiters>
@@ -241,6 +269,11 @@ namespace pretty_print
 
     template <typename ...Args>
     struct is_container<std::tuple<Args...>> : std::true_type { };
+
+#ifdef __cpp_lib_optional
+    template <typename T1>
+    struct is_container<std::optional<T1>> : std::true_type { };
+#endif
 
 
     // Default delimiters
@@ -314,6 +347,14 @@ namespace pretty_print
     template <typename ...Args> struct delimiters< ::std::tuple<Args...>, wchar_t> { static const delimiters_values<wchar_t> values; };
     template <typename ...Args> const delimiters_values<wchar_t> delimiters< ::std::tuple<Args...>, wchar_t>::values = { L"(", L", ", L")" };
 
+#ifdef __cpp_lib_optional
+    // Delimiters for optional
+
+    template <typename T> struct delimiters<std::optional<T>, char> { static const delimiters_values<char> values; };
+    template <typename T> const delimiters_values<char> delimiters<std::optional<T>, char>::values = { nullptr, nullptr, nullptr, "nullopt" };
+    template <typename T> struct delimiters< ::std::optional<T>, wchar_t> { static const delimiters_values<wchar_t> values; };
+    template <typename T> const delimiters_values<wchar_t> delimiters< ::std::optional<T>, wchar_t>::values = { nullptr, nullptr, nullptr, L"nullopt" };
+#endif
 
     // Type-erasing helper class for easy use of custom delimiters.
     // Requires TCharTraits = std::char_traits<TChar> and TChar = char or wchar_t, and MyDelims needs to be defined for TChar.
@@ -439,7 +480,6 @@ namespace std
         return stream << ::pretty_print::print_container_helper<T, TChar, TCharTraits>(container);
     }
 }
-
 
 
 #endif  // H_PRETTY_PRINT

@@ -109,6 +109,11 @@ int main(int argc, char * argv[])
   int arr[] = { 1, 4, 9, 16 };
   int err[] = { 2 };
 
+  #ifdef __cpp_lib_optional
+  auto opt1 = std::optional<std::pair<int, int>>(std::in_place, 123, 456);
+  auto opt2 = std::optional<std::pair<int, int>>();
+  #endif
+
   std::cout << "Static C array: " << arr << std::endl
             << "Static C array: " << err << std::endl
             << "Static C array with length: " << pretty_print_array(arr + 1, 2) << std::endl
@@ -118,5 +123,9 @@ int main(int argc, char * argv[])
             << "n-tuple: " << a3 << std::endl
             << "n-tuple: " << a4 << std::endl
             << "Hashmap bucket: " << bucket_print(um, 0) << std::endl
+            #ifdef __cpp_lib_optional
+            << "Optional: " << opt1 << std::endl
+            << "Empty optional: " << opt2 << std::endl
+            #endif
   ;
 }
