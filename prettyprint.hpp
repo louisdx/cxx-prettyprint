@@ -41,6 +41,7 @@ namespace pretty_print
             template <typename C> static yes & test(typename C::const_iterator*);
             template <typename C> static no  & test(...);
         public:
+            // 判断 T 是否有 const_iterator
             static const bool value = sizeof(test<T>(nullptr)) == sizeof(yes);
             using type =  T;
         };
