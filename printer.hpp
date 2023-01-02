@@ -104,158 +104,133 @@ namespace pretty_print
     // be customized by specializing the nested template.
 
     template <typename T,
-              typename TChar = char,
-              typename TCharTraits = ::std::char_traits<TChar>,
-              typename TDelimiters = delimiters<T, TChar>>
+              typename TDelimiters = delimiters<T, char>>
     struct print_container_helper
     {
         using delimiters_type = TDelimiters;
-        using ostream_type = std::basic_ostream<TChar, TCharTraits>;
 
         template <typename U>
         struct printer
         {
-            static void print_body(const U & c, ostream_type & stream)
+            static std::string print_body(const U & c)
             {
+                std::string r;
                 bool is_first = true;
                 for (auto& ele : c) {
                     if (delimiters_type::values.delimiter != NULL && !is_first) {
-                        stream << delimiters_type::values.delimiter;
+                        r += delimiters_type::values.delimiter;
                     }
-                    stream << ToString(ele);
+                    r += ToString(ele);
                     is_first = false;
                 }
+                return r;
             }
         };
 
         print_container_helper(const T & container)
         : container_(container)
-        {
-            std::cout << "use T type helper" << std::endl;
-        }
+        { }
 
-        inline void operator()(ostream_type & stream) const
+        inline std::string operator()() const
         {
+            std::string r;
             if (delimiters_type::values.prefix != NULL)
-                stream << delimiters_type::values.prefix;
+                r += delimiters_type::values.prefix;
 
-            printer<T>::print_body(container_, stream);
+            r += printer<T>::print_body(container_);
 
             if (delimiters_type::values.postfix != NULL)
-                stream << delimiters_type::values.postfix;
+                r+= delimiters_type::values.postfix;
+            return r;
         }
 
     private:
         const T & container_;
     };
-
-    // template <>
-    // struct print_container_helper<std::string, char, ::std::char_traits<char>, char>
-    // {
-    //     using ostream_type = std::basic_ostream<char, ::std::char_traits<char>>;
-
-    //     print_container_helper(const std::string & s)
-    //     : s_(s)
-    //     {
-    //         std::cout << "use full-spec type helper" << std::endl;
-    //     }
-
-    //     inline void operator()(ostream_type & stream) const
-    //     {
-    //         stream << "\"" << s_ << "\"";
-    //     }
-
-    // private:
-    //     const std::string & s_;
-    // };
-
+    
     // Specialization for pairs
 
-    template <typename T, typename TChar, typename TCharTraits, typename TDelimiters>
+    template <typename T, typename TDelimiters>
     template <typename T1, typename T2>
-    struct print_container_helper<T, TChar, TCharTraits, TDelimiters>::printer<std::pair<T1, T2>>
+    struct print_container_helper<T, TDelimiters>::printer<std::pair<T1, T2>>
     {
-        using ostream_type = typename print_container_helper<T, TChar, TCharTraits, TDelimiters>::ostream_type;
-
-        static void print_body(const std::pair<T1, T2> & c, ostream_type & stream)
+        static std::string print_body(const std::pair<T1, T2> & c)
         {
-            stream << c.first;
-            if (print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.delimiter != NULL)
-                stream << print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.delimiter;
-            stream << c.second;
+            std::string s;
+            s += ToString(c.first);
+            if (print_container_helper<T, TDelimiters>::delimiters_type::values.delimiter != NULL)
+                s += print_container_helper<T, TDelimiters>::delimiters_type::values.delimiter;
+            s += ToString(c.second);
+            return s;
         }
     };
 
-    // template <typename T, typename TChar, typename TCharTraits, typename TDelimiters>
-    // template <>
-    // struct print_container_helper<T, TChar, TCharTraits, TDelimiters>::printer<std::string>
-    // {
-    //     using ostream_type = typename print_container_helper<T, TChar, TCharTraits, TDelimiters>::ostream_type;
-
-    //     static void print_body(const std::string & s, ostream_type & stream)
-    //     {
-    //         stream << "\"" << s << "\"";
-    //     }
-    // };
 
     // Specialization for tuples
 
-    template <typename T, typename TChar, typename TCharTraits, typename TDelimiters>
+    template <typename T, typename TDelimiters>
     template <typename ...Args>
-    struct print_container_helper<T, TChar, TCharTraits, TDelimiters>::printer<std::tuple<Args...>>
+    struct print_container_helper<T, TDelimiters>::printer<std::tuple<Args...>>
     {
-        using ostream_type = typename print_container_helper<T, TChar, TCharTraits, TDelimiters>::ostream_type;
         using element_type = std::tuple<Args...>;
 
         template <std::size_t I> struct Int { };
 
-        static void print_body(const element_type & c, ostream_type & stream)
+        static std::string print_body(const element_type & c)
         {
-            tuple_print(c, stream, Int<0>());
+            return tuple_print(c, Int<0>());
         }
 
-        static void tuple_print(const element_type &, ostream_type &, Int<sizeof...(Args)>)
+        static std::string tuple_print(const element_type &, Int<sizeof...(Args)>)
         {
+            return "";
         }
 
-        static void tuple_print(const element_type & c, ostream_type & stream,
+        static std::string tuple_print(const element_type & c,
                                 typename std::conditional<sizeof...(Args) != 0, Int<0>, std::nullptr_t>::type)
         {
-            stream << std::get<0>(c);
-            tuple_print(c, stream, Int<1>());
+            std::string r;
+            r += ToString(std::get<0>(c));
+            r += tuple_print(c, Int<1>());
+            return r;
         }
 
         template <std::size_t N>
-        static void tuple_print(const element_type & c, ostream_type & stream, Int<N>)
+        static std::string tuple_print(const element_type & c, Int<N>)
         {
-            if (print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.delimiter != NULL)
-                stream << print_container_helper<T, TChar, TCharTraits, TDelimiters>::delimiters_type::values.delimiter;
+            std::string r;
+            if (print_container_helper<T, TDelimiters>::delimiters_type::values.delimiter != NULL)
+                r +=  print_container_helper<T, TDelimiters>::delimiters_type::values.delimiter;
 
-            stream << std::get<N>(c);
+            r += ToString(std::get<N>(c));
 
-            tuple_print(c, stream, Int<N + 1>());
+            r += tuple_print(c, Int<N + 1>());
+            return r;
         }
     };
 
-    // Prints a print_container_helper to the specified stream.
-
-    template<typename T, typename TChar, typename TCharTraits, typename TDelimiters>
-    inline std::basic_ostream<TChar, TCharTraits> & operator<<(
-        std::basic_ostream<TChar, TCharTraits> & stream,
-        const print_container_helper<T, TChar, TCharTraits, TDelimiters> & helper)
-    {
-        helper(stream);
-        return stream;
-    }
-
-
+    // Basic is_string_like template; specialize to derive from std::true_type for all desired container types
+    // 基础的 is_string_like 模板，用于判断类型 T 是否是可以被 std::string 构造的。
+    template <typename T,
+            typename T0 = typename std::decay<T>::type,
+			typename T1 = typename std::remove_pointer<T0>::type,
+			typename T2 = typename std::remove_const<T1>::type,
+			typename T3 = typename std::add_pointer<T2>::type
+	>
+    struct is_string_like : public std::integral_constant<bool,
+                                                        std::is_same<T, std::string>::value ||
+                                                        std::is_same<T3, char*>::value
+                                                        > { };
+    
     // Basic is_container template; specialize to derive from std::true_type for all desired container types
 
     template <typename T>
     struct is_container : public std::integral_constant<bool,
                                                         detail::has_const_iterator<T>::value &&
                                                         detail::has_begin_end<T>::beg_value  &&
-                                                        detail::has_begin_end<T>::end_value> { };
+                                                        detail::has_begin_end<T>::end_value  &&
+                                                        !is_string_like<T>::value
+                                                        > { };
 
     template <typename T, std::size_t N>
     struct is_container<T[N]> : std::true_type { };
@@ -331,7 +306,6 @@ namespace pretty_print
     template <typename T, typename THash, typename TEqual, typename TAllocator>
     const delimiters_values<wchar_t> delimiters< ::std::unordered_multiset<T, THash, TEqual, TAllocator>, wchar_t>::values = { L"{", L", ", L"}" };
 
-
     // Delimiters for pair and tuple
 
     template <typename T1, typename T2> struct delimiters<std::pair<T1, T2>, char> { static const delimiters_values<char> values; };
@@ -355,41 +329,6 @@ namespace pretty_print
         virtual std::ostream & stream(::std::ostream &) = 0;
         virtual std::wostream & stream(::std::wostream &) = 0;
     };
-
-    template <typename T, typename Delims>
-    struct custom_delims_wrapper : custom_delims_base
-    {
-        custom_delims_wrapper(const T & t_) : t(t_) { }
-
-        std::ostream & stream(std::ostream & s)
-        {
-            return s << print_container_helper<T, char, std::char_traits<char>, Delims>(t);
-        }
-
-        std::wostream & stream(std::wostream & s)
-        {
-            return s << print_container_helper<T, wchar_t, std::char_traits<wchar_t>, Delims>(t);
-        }
-
-    private:
-        const T & t;
-    };
-
-    template <typename Delims>
-    struct custom_delims
-    {
-        template <typename Container>
-        custom_delims(const Container & c) : base(new custom_delims_wrapper<Container, Delims>(c)) { }
-
-        std::unique_ptr<custom_delims_base> base;
-    };
-
-    template <typename TChar, typename TCharTraits, typename Delims>
-    inline std::basic_ostream<TChar, TCharTraits> & operator<<(std::basic_ostream<TChar, TCharTraits> & s, const custom_delims<Delims> & p)
-    {
-        return p.base->stream(s);
-    }
-
 
     // A wrapper for a C-style array given as pointer-plus-size.
     // Usage: std::cout << pretty_print_array(arr, n) << std::endl;
@@ -454,29 +393,39 @@ bucket_print(const T & m, typename T::size_type n)
 }
 
 
-// Prints a container to the stream using default delimiters
-
-template<typename T, typename TChar, typename TCharTraits>
-inline typename std::enable_if< ::pretty_print::is_container<T>::value,
-                            std::basic_ostream<TChar, TCharTraits> &>::type
-operator<<(std::basic_ostream<TChar, TCharTraits> & stream, const T & container)
-{
-    return stream << ::pretty_print::print_container_helper<T, TChar, TCharTraits>(container);
+template <typename T>
+std::string ToStringHelper(const T& container,
+    typename std::enable_if<::pretty_print::is_container<T>::value>::type* = 0,
+    typename std::enable_if<!::pretty_print::is_string_like<T>::value>::type* = 0
+    ) {
+    std::string r = ::pretty_print::print_container_helper<T>(container)();
+    return r;
 }
 
-inline std::basic_ostream<char, std::char_traits<char>> &
-operator<<(std::basic_ostream<char, std::char_traits<char>> & stream, const std::string & s)
-{
-    std::string ns = "\"" + s + "\"";
-    return stream << ns;
+
+template <typename T>
+std::string ToStringHelper(const T& container,
+    typename std::enable_if<!::pretty_print::is_container<T>::value>::type* = 0,
+    typename std::enable_if<!::pretty_print::is_string_like<T>::value>::type* = 0
+    ) {
+    return std::to_string(container);
+}
+
+template <typename T>
+std::string ToStringHelper(const T& s,
+    typename std::enable_if<!::pretty_print::is_container<T>::value>::type* = 0,
+    typename std::enable_if<::pretty_print::is_string_like<T>::value>::type* = 0
+    ) {
+    return "\"" + std::string(s) + "\"";
 }
 
 template <typename T>
 std::string ToString(const T& container) {
-    std::stringstream ss;
-    ss << container;
-    return ss.str();
+    // using namespace std;
+    // cout << pretty_print::is_string_like<T>::value << endl;
+    // cout << pretty_print::is_container<T>::value << endl;
+    // return "";
+    return ToStringHelper(container, nullptr, nullptr);
 }
-
 
 #endif  // H_PRETTY_PRINT
